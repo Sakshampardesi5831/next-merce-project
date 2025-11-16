@@ -204,8 +204,8 @@ export default function ShopPage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Rating rating={product.rating.rate} />
-                        <span>({product.rating.count})</span>
+                        {/* <Rating rating={product.rating.rate} />
+                        <span>({product.rating.count})</span> */}
                       </div>
                     </div>
                   </div>

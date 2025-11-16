@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Menu,
   Search,
@@ -8,6 +8,8 @@ import {
   ChevronDown,
   X,
   User,
+  Clock,
+  TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,12 +19,41 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { productsData } from "@/constant/products";
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
   const [isPagesOpen, setIsPagesOpen] = useState(false);
   const [isBlogsOpen, setIsBlogsOpen] = useState(false);
+
+  // Mock recent searches
+  const recentSearches = ["laptop", "jacket", "jewelry", "monitor"];
+  
+  // Popular categories
+  const popularCategories = [
+    { name: "Electronics", count: 6 },
+    { name: "Men's Clothing", count: 4 },
+    { name: "Women's Clothing", count: 6 },
+    { name: "Jewelry", count: 4 },
+  ];
+
+  // Filter products based on search query
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    return productsData.filter(product =>
+      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase())
+    ).slice(0, 6); // Limit to 6 results
+  }, [searchQuery]);
 
   return (
     <header className="w-full border-b bg-white">
@@ -77,7 +108,12 @@ export default function Header() {
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Mobile Search Icon */}
-            <Button variant="ghost" size="icon" className="lg:hidden">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="lg:hidden"
+              onClick={() => setIsSearchDialogOpen(true)}
+            >
               <Search className="h-5 w-5" />
             </Button>
 
@@ -137,7 +173,7 @@ export default function Header() {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/shop"
                   className="text-sm font-medium text-gray-700 hover:text-blue-600"
                 >
                   Shop
@@ -193,6 +229,123 @@ export default function Header() {
           </nav>
         </div>
       </div>
+
+      {/* Search Dialog */}
+      <Dialog open={isSearchDialogOpen} onOpenChange={setIsSearchDialogOpen}>
+        <DialogContent className="max-w-2xl h-[80vh] p-0 flex flex-col">
+          <DialogHeader className="p-6 pb-4 border-b">
+            <DialogTitle className="text-left">Search Products</DialogTitle>
+          </DialogHeader>
+          
+          <div className="px-6 py-4 border-b">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search for products, categories..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4"
+                autoFocus
+              />
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto">
+            {!searchQuery.trim() ? (
+              <div className="p-6 space-y-6">
+                {/* Recent Searches */}
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    Recent Searches
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {recentSearches.map((search, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSearchQuery(search)}
+                        className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                      >
+                        {search}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Popular Categories */}
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4" />
+                    Popular Categories
+                  </h3>
+                  <div className="space-y-2">
+                    {popularCategories.map((category, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSearchQuery(category.name.toLowerCase())}
+                        className="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                      >
+                        <span className="text-sm font-medium">{category.name}</span>
+                        <span className="text-xs text-gray-500">{category.count} items</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-6">
+                {filteredProducts.length > 0 ? (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900 mb-4">
+                      Found {filteredProducts.length} result{filteredProducts.length !== 1 ? 's' : ''}
+                    </h3>
+                    <div className="space-y-3">
+                      {filteredProducts.map((product) => (
+                        <div
+                          key={product.id}
+                          className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+                          onClick={() => {
+                            setIsSearchDialogOpen(false);
+                            setSearchQuery("");
+                          }}
+                        >
+                          <img
+                            src={product.image}
+                            alt={product.title}
+                            className="w-12 h-12 object-contain bg-gray-100 rounded"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-medium text-gray-900 truncate">
+                              {product.title}
+                            </h4>
+                            <p className="text-xs text-gray-500 capitalize">
+                              {product.category}
+                            </p>
+                            <p className="text-sm font-semibold text-blue-600">
+                              ${product.price}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Search className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                    <h3 className="text-sm font-medium text-gray-900 mb-2">
+                      No products found
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      Try searching for something else
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (

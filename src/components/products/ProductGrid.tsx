@@ -1,6 +1,6 @@
-'use client';
-import React from 'react';
-import { Grid, List, Heart, Eye, ShoppingCart } from 'lucide-react';
+"use client";
+import React from "react";
+import { Grid, List, Heart, Eye, ShoppingCart } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -8,7 +8,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
+} from "@/components/ui/pagination";
 
 interface Product {
   id: number;
@@ -28,11 +28,11 @@ interface Product {
 interface ProductGridProps {
   products: Product[];
   totalProducts: number;
-  viewMode: 'grid' | 'list';
+  viewMode: "grid" | "list";
   currentPage: number;
   totalPages: number;
   itemsPerPage: number;
-  onViewModeChange: (mode: 'grid' | 'list') => void;
+  onViewModeChange: (mode: "grid" | "list") => void;
   onPageChange: (page: number) => void;
   onProductQuickView: (product: Product) => void;
 }
@@ -60,26 +60,28 @@ export default function ProductGrid({
             <option>Top Rated</option>
           </select>
           <span className="text-gray-600">
-            Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalProducts)} of {totalProducts} Products
+            Showing {(currentPage - 1) * itemsPerPage + 1}-
+            {Math.min(currentPage * itemsPerPage, totalProducts)} of{" "}
+            {totalProducts} Products
           </span>
         </div>
         <div className="flex gap-2">
           <button
-            onClick={() => onViewModeChange('grid')}
+            onClick={() => onViewModeChange("grid")}
             className={`p-2 rounded ${
-              viewMode === 'grid'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700'
+              viewMode === "grid"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-700"
             }`}
           >
             <Grid size={20} />
           </button>
           <button
-            onClick={() => onViewModeChange('list')}
+            onClick={() => onViewModeChange("list")}
             className={`p-2 rounded ${
-              viewMode === 'list'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700'
+              viewMode === "list"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-700"
             }`}
           >
             <List size={20} />
@@ -88,7 +90,7 @@ export default function ProductGrid({
       </div>
 
       {/* Products */}
-      {viewMode === 'grid' ? (
+      {viewMode === "grid" ? (
         <div className="grid grid-cols-3 gap-6">
           {products.map((product) => (
             <div
@@ -110,7 +112,7 @@ export default function ProductGrid({
                     <button className="px-3 py-2 bg-white rounded-md shadow-md hover:bg-blue-600 hover:text-white transition-colors text-sm font-medium">
                       Add to Cart
                     </button>
-                    <button 
+                    <button
                       onClick={() => onProductQuickView(product)}
                       className="p-2 bg-white rounded-full shadow-md hover:bg-blue-600 hover:text-white transition-colors"
                     >
@@ -133,7 +135,7 @@ export default function ProductGrid({
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <div className="flex items-center">
-                    {'⭐'.repeat(Math.round(product.rating.rate))}
+                    {"⭐".repeat(Math.round(product.rating.rate))}
                   </div>
                   <span>({product.rating.count})</span>
                 </div>
@@ -148,7 +150,7 @@ export default function ProductGrid({
               key={product.id}
               className="bg-white rounded-lg p-4 flex gap-4 shadow hover:shadow-lg transition-shadow group"
             >
-              <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+              <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 relative overflow-hidden">
                 <img
                   src={product.image}
                   alt={product.title}
@@ -160,7 +162,7 @@ export default function ProductGrid({
                     <button className="p-1.5 bg-white rounded-full shadow-md hover:bg-blue-600 hover:text-white transition-colors">
                       <Heart className="w-3 h-3" />
                     </button>
-                    <button 
+                    <button
                       onClick={() => onProductQuickView(product)}
                       className="p-1.5 bg-white rounded-full shadow-md hover:bg-blue-600 hover:text-white transition-colors"
                     >
@@ -186,7 +188,7 @@ export default function ProductGrid({
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <div className="flex items-center">
-                    {'⭐'.repeat(Math.round(product.rating.rate))}
+                    {"⭐".repeat(Math.round(product.rating.rate))}
                   </div>
                   <span>({product.rating.count})</span>
                 </div>
@@ -195,33 +197,45 @@ export default function ProductGrid({
           ))}
         </div>
       )}
-      
+
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-8 flex justify-center">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious 
+                <PaginationPrevious
                   onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  className={
+                    currentPage === 1
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
                 />
               </PaginationItem>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    onClick={() => onPageChange(page)}
-                    isActive={currentPage === page}
-                    className="cursor-pointer"
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => onPageChange(page)}
+                      isActive={currentPage === page}
+                      className="cursor-pointer"
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              )}
               <PaginationItem>
-                <PaginationNext 
-                  onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                <PaginationNext
+                  onClick={() =>
+                    onPageChange(Math.min(totalPages, currentPage + 1))
+                  }
+                  className={
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
                 />
               </PaginationItem>
             </PaginationContent>

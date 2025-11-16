@@ -126,7 +126,7 @@ export default function ProductFilter({
                   <button
                     key={color.value}
                     onClick={() => onToggleColor(color.value)}
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
                       selectedColors.includes(color.value)
                         ? "border-blue-600"
                         : "border-gray-300"
