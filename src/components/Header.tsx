@@ -63,7 +63,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <img
-              src="/logo/logo.png"
+              src="/logo.png"
               alt="NextMerce Logo"
               className="h-8 sm:h-12 w-auto"
             />
