@@ -13,6 +13,7 @@ export default function ShopPage() {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [desktopFilterOpen, setDesktopFilterOpen] = useState(true);
   const itemsPerPage = 9;
 
   const {
@@ -57,20 +58,22 @@ export default function ShopPage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Filter */}
-          <div className="hidden lg:block">
-            <ProductFilter
-              categories={categories}
-              selectedCategories={selectedCategories}
-              selectedSizes={selectedSizes}
-              selectedColors={selectedColors}
-              priceRange={priceRange}
-              onToggleCategory={toggleCategory}
-              onToggleSize={toggleSize}
-              onToggleColor={toggleColor}
-              onPriceRangeChange={setPriceRange}
-              onClearAllFilters={clearAllFilters}
-            />
-          </div>
+          {desktopFilterOpen && (
+            <div className="hidden lg:block">
+              <ProductFilter
+                categories={categories}
+                selectedCategories={selectedCategories}
+                selectedSizes={selectedSizes}
+                selectedColors={selectedColors}
+                priceRange={priceRange}
+                onToggleCategory={toggleCategory}
+                onToggleSize={toggleSize}
+                onToggleColor={toggleColor}
+                onPriceRangeChange={setPriceRange}
+                onClearAllFilters={clearAllFilters}
+              />
+            </div>
+          )}
 
           {/* Mobile Filter Overlay */}
           {filterOpen && (
@@ -115,6 +118,13 @@ export default function ShopPage() {
                     className="lg:hidden p-2 border rounded text-gray-700 hover:bg-gray-50"
                   >
                     <Filter size={20} />
+                  </button>
+                  <button
+                    onClick={() => setDesktopFilterOpen(!desktopFilterOpen)}
+                    className="hidden lg:flex items-center gap-2 p-2 border rounded text-gray-700 hover:bg-gray-50"
+                  >
+                    <Filter size={20} />
+                    {desktopFilterOpen ? 'Hide Filters' : 'Show Filters'}
                   </button>
                   <select className="border rounded px-4 py-2 text-gray-700 flex-1 sm:flex-none">
                     <option>Latest Products</option>
